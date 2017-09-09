@@ -11,28 +11,20 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ExecuteBatchJob {
 
-    static Logger logger = LogManager.getLogger(ExecuteBatchJob.class.getName());
+    private static Logger logger = LogManager.getLogger(ExecuteBatchJob.class.getName());
 
     public static void main(String[] args) {
 
         String[] springConfig = {"batch/firstBatch.xml"};
-        ApplicationContext context = new
-                ClassPathXmlApplicationContext(springConfig);
+        ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);
 
-        JobLauncher jobLauncher = (JobLauncher)
-                context.getBean("jobLauncher");
-        Job job = (Job) context.getBean("firstBatchJob");
+        JobLauncher jobLauncher = context.getBean("jobLauncher", JobLauncher.class);
+        Job job = context.getBean("firstBatchJob", Job.class);
         try {
-            JobExecution execution = jobLauncher.run(job, new
-                    JobParameters());
-            logger.info("Exit Status : " +
-                    execution.getStatus());
+            JobExecution execution = jobLauncher.run(job, new JobParameters());
+            logger.info("Exit Status : " + execution.getStatus());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (context != null) {
-                context = null;
-            }
         }
         logger.info("Done");
     }

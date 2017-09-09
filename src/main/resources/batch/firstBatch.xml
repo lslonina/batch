@@ -6,12 +6,21 @@
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 http://www.springframework.org/schema/batch
 http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+
     <beans:import resource="context.xml"/>
-    <beans:bean id="firstBatch" class=" batch.FirstBatch"/>
+
+    <beans:bean id="firstBatch" class="batch.FirstBatch"/>
+    <beans:bean id="jobStatusListener" class="batch.listeners.JobStatusListener"/>
+
     <step id="firstBatchStepOne">
         <tasklet ref="firstBatch"/>
     </step>
+
     <job id="firstBatchJob">
+        <listeners>
+            <listener ref="jobStatusListener"/>
+        </listeners>
         <step id="stepOne" parent="firstBatchStepOne"/>
     </job>
+
 </beans:beans>
